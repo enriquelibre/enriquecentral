@@ -5,10 +5,11 @@ import { MobileNav } from './components/MobileNav';
 import { Dashboard } from './sections/Dashboard';
 import { Tasks } from './sections/Tasks';
 import { Finances } from './sections/Finances';
+import { AdminPanel } from './sections/AdminPanel';
 import type { ViewType } from './types';
 
 function AppContent() {
-  const { user, loading, signOut } = useAuth();
+  const { user, isAdmin, loading, signOut } = useAuth();
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
 
   if (loading) {
@@ -31,6 +32,8 @@ function AppContent() {
         return <Tasks />;
       case 'finances':
         return <Finances />;
+      case 'admin':
+        return isAdmin ? <AdminPanel /> : <Dashboard />;
       default:
         return (
           <div className="flex flex-col items-center justify-center h-64 text-gray-500">
@@ -47,6 +50,7 @@ function AppContent() {
         currentView={currentView} 
         onViewChange={setCurrentView}
         onLogout={signOut}
+        isAdmin={isAdmin}
       />
 
       <main className="lg:ml-64 p-4 lg:p-8 max-w-7xl">

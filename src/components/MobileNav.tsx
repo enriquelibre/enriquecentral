@@ -1,10 +1,11 @@
-import { LayoutDashboard, CheckSquare, Wallet, Users, Calendar, FileText, Target, BarChart3, LogOut } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Wallet, Users, Calendar, FileText, Target, BarChart3, LogOut, Shield } from 'lucide-react';
 import type { ViewType } from '../types';
 
 interface MobileNavProps {
   currentView: ViewType;
   onViewChange: (view: ViewType) => void;
   onLogout: () => void;
+  isAdmin?: boolean;
 }
 
 const navItems: { id: ViewType; label: string; icon: React.ElementType }[] = [
@@ -18,7 +19,7 @@ const navItems: { id: ViewType; label: string; icon: React.ElementType }[] = [
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
 ];
 
-export function MobileNav({ currentView, onViewChange, onLogout }: MobileNavProps) {
+export function MobileNav({ currentView, onViewChange, onLogout, isAdmin }: MobileNavProps) {
   return (
     <>
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 h-screen fixed left-0 top-0">
@@ -50,6 +51,22 @@ export function MobileNav({ currentView, onViewChange, onLogout }: MobileNavProp
                 </li>
               );
             })}
+
+            {isAdmin && (
+              <li>
+                <button
+                  onClick={() => onViewChange('admin')}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    currentView === 'admin' 
+                      ? 'bg-purple-50 text-purple-600' 
+                      : 'text-purple-600 hover:bg-purple-50'
+                  }`}
+                >
+                  <Shield className="w-5 h-5" />
+                  Administración
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -66,7 +83,7 @@ export function MobileNav({ currentView, onViewChange, onLogout }: MobileNavProp
 
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-area-bottom z-50">
         <div className="flex justify-around items-center py-2">
-          {navItems.slice(0, 5).map((item) => {
+          {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id;
             return (
@@ -80,6 +97,15 @@ export function MobileNav({ currentView, onViewChange, onLogout }: MobileNavProp
               </button>
             );
           })}
+          {isAdmin && (
+            <button
+              onClick={() => onViewChange('admin')}
+              className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg ${currentView === 'admin' ? 'text-purple-600' : 'text-gray-500'}`}
+            >
+              <Shield className="w-5 h-5" />
+              <span className="text-xs">Admin</span>
+            </button>
+          )}
           <button onClick={() => onViewChange('more')} className="flex flex-col items-center gap-1 px-3 py-2 text-gray-500">
             <span className="text-xl">•••</span>
             <span className="text-xs">Más</span>
